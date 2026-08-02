@@ -1,4 +1,7 @@
-# react-native-ino-player
+# React Native Ino Player
+
+<a href="https://www.npmjs.com/package/react-native-ino-player"><img width="100%" height="35%" alt="github-banner" src="https://github.com/user-attachments/assets/78b2e5ec-5b57-48c0-b984-69cb57cbcf26" /></a>
+<br></br>
 
 > A full-featured audio/video media player for **React Native** — built on the **New Architecture** (TurboModule + Bridgeless, RN ≥ 0.74).
 
@@ -11,51 +14,63 @@
 
 ---
 
-## Platform Support
-
-| Device / Platform | Supported | Engine | Notes |
-|---|:---:|---|---|
-| **Android phone** | ✅ | Media3 ExoPlayer | API 26+ (Android 8.0+) |
-| **Android tablet** | ✅ | Media3 ExoPlayer | Same APK as phone, no extra code |
-| **Android foldable** | ✅ | Media3 ExoPlayer | Both folded + unfolded |
-| **Chromebook (Play Store)** | ✅ | Media3 ExoPlayer | Runs Android APK |
-| **iPhone** | ✅ | AVFoundation | iOS 13+ |
-| **iPad** | ✅ | AVFoundation | Same IPA as iPhone |
-| **Mac Catalyst** | ✅ | AVFoundation | iPad app on macOS, enable in Xcode |
-| **Android Auto** | ✅ | MediaLibraryService | Old + new head units (2016–2025) |
-| **Android Automotive OS** | ✅ | CarAppService | AAOS API 1–6 |
-| **Android TV** | ✅ | MediaLibrarySession | All Android TV / Google TV |
-| **Wear OS** | ✅ | Data Layer | Wear OS 2/3/4 |
-| **CarPlay** | ✅ | MPNowPlayingInfo | Via AVFoundation lock screen |
-| **Chromecast** | ✅ | media3-cast CastPlayer | Receiver SDK 3.x–6.x (2018+) |
-| **AirPlay 1 & 2** | ✅ | AVAudioSession | Automatic, no extra code |
-| **macOS native (AppKit)** | ❌ | — | Use Mac Catalyst instead |
-| **Windows** | ❌ | — | Different API; see docs/ARCHITECTURE.md |
-| **Web** | ❌ | — | Use HTMLAudioElement instead |
-| **watchOS** | ❌ | — | Uses WKAudioFileQueuePlayer |
-| **tvOS** | ❌ | — | Separate Apple TV target needed |
+## Table of Contents
+- [react-native-ino-player](#react-native-ino-player)
+  - [Platform Support](#platform-support)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+    - [New Architecture](#new-architecture)
+    - [Android](#android)
+    - [iOS](#ios)
+    - [Web](#web)
+    - [Windows](#windows)
+  - [Checking Platform Support at Runtime](#checking-platform-support-at-runtime)
+  - [Quick Start](#quick-start)
+  - [Playback Controls](#playback-controls)
+  - [Queue Management](#queue-management)
+  - [Repeat Modes](#repeat-modes)
+  - [Shuffle](#shuffle)
+  - [Progress Bar \& Seeking](#progress-bar--seeking)
+  - [Sleep Timer](#sleep-timer)
+  - [Volume Fade](#volume-fade)
+  - [Custom Remote Actions](#custom-remote-actions)
+  - [Preloading \& Caching](#preloading--caching)
+  - [AirPlay \& Chromecast](#airplay--chromecast)
+  - [Android Auto \& CarPlay](#android-auto--carplay)
+  - [React Hooks Reference](#react-hooks-reference)
+  - [Full API Reference](#full-api-reference)
+    - [`InoPlayer.setupPlayer(options?)`](#inoplayersetupplayeroptions)
+    - [State enum](#state-enum)
+    - [Event enum](#event-enum)
+  - [Error Handling](#error-handling)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ---
 
-## Table of Contents
+## Platform Support
 
-1. [Installation](#installation)
-2. [Quick Start](#quick-start)
-3. [Playback Controls](#playback-controls)
-4. [Queue Management](#queue-management)
-5. [Repeat Modes](#repeat-modes)
-6. [Shuffle](#shuffle)
-7. [Progress Bar & Seeking](#progress-bar--seeking)
-8. [Sleep Timer](#sleep-timer)
-9. [Volume Fade](#volume-fade)
-10. [Custom Remote Actions](#custom-remote-actions)
-11. [Preloading & Caching](#preloading--caching)
-12. [AirPlay & Chromecast](#airplay--chromecast)
-13. [Android Auto & CarPlay](#android-auto--carplay)
-14. [React Hooks Reference](#react-hooks-reference)
-15. [Full API Reference](#full-api-reference)
-16. [Error Handling](#error-handling)
-17. [Contributing](#contributing)
+| Device / Platform | Supported | Engine | Min version |
+|---|:---:|---|---|
+| **Android** phone, tablet, foldable | ✅ | Media3 ExoPlayer 1.10.0 | API 26 (Android 8.0) |
+| **iOS** iPhone, iPad | ✅ | AVFoundation | iOS 13.0 |
+| **Mac Catalyst** | ✅ | AVFoundation | macOS 10.15 |
+| **Web** (React Native Web) | ✅ | HTMLAudioElement + MediaSession API | Chrome 73 / Firefox 82 / Safari 14 |
+| **Windows** (RN Windows) | ✅ | WinRT `Windows.Media.Playback.MediaPlayer` | Windows 10 build 19041 |
+| Android Auto (old + new head units) | ✅ | MediaLibraryService | 2016+ |
+| Android Automotive OS | ✅ | CarAppService | AAOS API 1–6 |
+| Android TV | ✅ | MediaLibrarySession | API 26+ |
+| Wear OS 2 / 3 / 4 | ✅ | Wearable Data Layer | OS 2+ |
+| CarPlay | ✅ | MPNowPlayingInfoCenter | iOS 13+ |
+| Chromecast | ✅ | media3-cast CastPlayer | Receiver 3.x–6.x |
+| AirPlay 1 & 2 | ✅ | AVAudioSession (automatic) | All iOS |
+| **macOS native (AppKit)** | ❌ | — | Use Mac Catalyst instead |
+| **watchOS** | ❌ | — | Uses WKAudioFileQueuePlayer |
+| **tvOS** | ❌ | — | Separate Apple TV target needed |
+
+
+<div style="border-left: 4px solid #d29922; padding: 28px 15px; background-color: transparent; color: #d29922; margin: 10px 0; font-weight: 500;"> Unsupported features will be implemented soon
+</div>
 
 ---
 
@@ -67,7 +82,47 @@ npm install react-native-ino-player
 yarn add react-native-ino-player
 ```
 
-### iOS
+---
+
+### New Architecture (react-native ≥ 0.79)
+
+This library **requires** the New Architecture. In your `android/gradle.properties`:
+
+```properties
+newArchEnabled=true
+```
+
+In `ios/Podfile`:
+
+```ruby
+ENV['RCT_NEW_ARCH_ENABLED'] = '1'
+```
+---
+
+### Android
+
+No extra steps — the library's `AndroidManifest.xml` declares all permissions and services.
+
+Ensure your app's `build.gradle` has `minSdkVersion = 26`.
+
+For Chromecast support, add to your app's `AndroidManifest.xml`:
+
+```xml
+<meta-data
+    android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+    android:value="com.inoplayer.cast.InoCastOptionsProvider" />
+```
+
+For Android Auto, also add to your manifest:
+
+```xml
+<meta-data
+  android:name="com.google.android.gms.car.application"
+  android:resource="@xml/automotive_app_desc" />
+```
+---
+
+### iOS / Mac Catalyst
 
 ```bash
 cd ios && pod install
@@ -81,59 +136,73 @@ Add to your `Info.plist`:
   <string>audio</string>
 </array>
 ```
+---
 
-### Android
+### Web
 
-No extra steps — the library's `AndroidManifest.xml` declares all permissions and services.
+Works out of the box with React Native Web. Metro resolves the `.web.ts` files automatically — no extra configuration needed.
 
-Ensure your app's `build.gradle` has `minSdkVersion = 21`.
-
-For Chromecast support, add to your app's `AndroidManifest.xml`:
-
-```xml
-<meta-data
-  android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-  android:value="YOUR_PACKAGE.CastOptionsProvider" />
+```tsx
+// Web usage is identical to native
+import InoPlayer from 'react-native-ino-player';
+await InoPlayer.setupPlayer();
 ```
 
-For Android Auto, also add to your manifest:
+### Web-specific Notes
 
-```xml
-<meta-data
-  android:name="com.google.android.gms.car.application"
-  android:resource="@xml/automotive_app_desc" />
+- **Background audio**: Pauses when tab is hidden (browser restriction). `navigator.mediaSession` keeps lock-screen controls alive.
+- **AirPlay**: Automatic in Safari. No extra code.
+- **Chromecast**: Requires [Google Cast SDK for Web](https://developers.google.com/cast/docs/web_sender) separately.
+- **Caching**: Uses Cache API when available (HTTPS + Service Worker), falls back to `<audio preload="auto">`.
+
+---
+
+### Windows (React Native Windows)
+
+See [`windows/README.md`](windows/README.md) for Visual Studio setup.
+
+```cpp
+// In your App.cpp
+#include <winrt/RNInoPlayer.h>
+PackageProviders().Append(winrt::make<winrt::RNInoPlayer::ReactPackageProvider>());
 ```
+### Windows-specific Notes
 
-### New Architecture
+- **Background audio**: `MediaPlayerAudioCategory.Media` keeps audio alive when minimised.
+- **Lock screen**: `SystemMediaTransportControls` shows Now Playing in taskbar/lock screen.
+- **HTTP headers**: Not supported by `MediaSource.CreateFromUri()` — use signed URLs for authenticated streams.
+- **Chromecast/AirPlay**: Not applicable on Windows.
 
-This library **requires** the New Architecture. In your `android/gradle.properties`:
-
-```properties
-newArchEnabled=true
-```
-
-In `ios/Podfile`:
-
-```ruby
-ENV['RCT_NEW_ARCH_ENABLED'] = '1'
-```
 
 ---
 
 ## Checking Platform Support at Runtime
 
-On unsupported platforms (Windows, Web), every `InoPlayer.*` call throws `UnsupportedPlatformError`. Guard your setup:
+On unsupported platforms ( macOS native AppKit, watchOS, tvOS ), every `InoPlayer.*` call throws `UnsupportedPlatformError`. Guard your setup:
 
 ```tsx
 import InoPlayer, { isPlatformSupported } from 'react-native-ino-player';
 
 useEffect(() => {
-  if (!isPlatformSupported()) return; // Windows / Web: skip gracefully
+  if (!isPlatformSupported()) return; 
+  // macOS native AppKit, watchOS, tvOS — skip gracefully
 
   InoPlayer.setupPlayer().then(() => {
     // Ready
   });
 }, []);
+```
+**or**
+
+```tsx
+import InoPlayer, { isPlatformSupported } from 'react-native-ino-player';
+
+if (!isPlatformSupported()) {
+  // macOS native AppKit, watchOS, tvOS — skip gracefully
+  return;
+}
+
+await InoPlayer.setupPlayer(); // Ready
 ```
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full per-platform compatibility breakdown.
@@ -143,19 +212,17 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full per-platform com
 ## Quick Start
 
 ```tsx
-import InoPlayer, {
-  Capability,
-  usePlaybackState,
-  useProgress,
-  useActiveTrack,
-} from 'react-native-ino-player';
+import InoPlayer, { Capability, usePlaybackState, useProgress, useActiveTrack, isPlatformSupported, } from 'react-native-ino-player';
+
+// Guard for unsupported platforms (macOS native, watchOS, tvOS)
+if (!isPlatformSupported()) return;
 
 // 1. Initialize once at app startup (before any other API call)
 await InoPlayer.setupPlayer({
   maxCacheSize: 512 * 1024 * 1024, // 512 MB
   preloadWindowSize: 3,
   android: { wakeMode: 'network' },
-  ios:     { audioCategory: 'playback' },
+  ios: { audioCategory: 'playback' },
 });
 
 // 2. Configure notification / lock-screen controls
@@ -213,6 +280,9 @@ await InoPlayer.setRate(1.5);
 
 // Volume (0.0 – 1.0)
 await InoPlayer.setVolume(0.8);
+
+// fade to silence over 3 s
+await InoPlayer.fadeVolumeTo(0, 3000);
 ```
 
 ---
@@ -224,17 +294,17 @@ await InoPlayer.setVolume(0.8);
 await InoPlayer.setQueue(tracks, /* initialIndex */ 0);
 
 // Append
-await InoPlayer.add(newTrack);
-await InoPlayer.add([track1, track2]);
+await InoPlayer.add(newTrack); // Default insert at the end
+await InoPlayer.add(newTrack, 2); // Insert before index
 
-// Insert before index
-await InoPlayer.add(newTrack, 2);
+await InoPlayer.add([track1, track2]); // Default insert at the end
+await InoPlayer.add([track1, track2], 2); // Insert before index
 
 // Navigate
 await InoPlayer.skip(3);             // jump to queue index 3
-await InoPlayer.skip(3, 30);         // jump to index 3, start at 30 s
+await InoPlayer.skip(3, 30);         // jump to index 3, start at 30s
 await InoPlayer.skipToNext();
-await InoPlayer.skipToPrevious();    // seeks to start if > 3 s in
+await InoPlayer.skipToPrevious();    // seeks to start if > 3s in
 
 // Modify
 await InoPlayer.remove(1);
@@ -318,10 +388,8 @@ await InoPlayer.cancelSleepTimer();
 
 ```tsx
 const { remaining, active, cancel } = useSleepTimer();
-
-return active
-  ? <Text onPress={cancel}>Stops in {Math.ceil(remaining)} s — tap to cancel</Text>
-  : null;
+<Text onPress={cancel}>{active ? `Stops in ${Math.ceil(remaining)}s` : 'No timer'}
+</Text>
 ```
 
 ---
@@ -415,7 +483,7 @@ await InoPlayer.clearCache();
 ## AirPlay & Chromecast
 
 ```tsx
-import { Platform } from 'react-native';
+import { Platform, Text, TouchableOpacity } from 'react-native';
 import { useCastState, CastState } from 'react-native-ino-player';
 
 function CastButton() {
@@ -589,6 +657,15 @@ Common error codes on Android (ExoPlayer):
 | `ERROR_CODE_IO_FILE_NOT_FOUND` | 404 / bad URL |
 | `ERROR_CODE_PARSING_CONTAINER_MALFORMED` | Corrupt media file |
 | `ERROR_CODE_DECODER_INIT_FAILED` | Codec not supported on device |
+
+Common error codes on Web:
+
+| Code | Cause |
+|---|---|
+| `MEDIA_ERR_NETWORK`| Network unreachable |
+| `MEDIA_ERR_DECODE`| Corrupt media file |
+| `MEDIA_ERR_SRC_NOT_SUPPORTED`| Unsupported format/Bad URL |
+| `AUTOPLAY_BLOCKED`|
 
 ---
 
