@@ -29,6 +29,7 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 **/.xcode.env.local
+xcuserdata/
 
 # Android/IJ
 #
@@ -40,6 +41,9 @@ project.xcworkspace
 .settings
 local.properties
 android.iml
+.gradle/
+.idea/
+*.iml
 
 # Cocoapods
 #
@@ -54,6 +58,9 @@ node_modules/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # BUCK
 buck-out/
@@ -68,6 +75,9 @@ android/keystores/debug.keystore
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
 
 # Expo
 .expo/
@@ -84,3 +94,32 @@ android/generated
 
 # React Native Nitro Modules
 nitrogen/
+
+# Example App
+example/node_modules/
+example/android/.gradle
+example/android/app/build/
+example/android/build/
+example/ios/Pods/
+example/ios/build/
+example/ios/DerivedData/
+
+# .env
+.env
+.env.*
+!.env.example
+
+# Ts Build Info
+*.tsbuildinfo
+
+# Test
+coverage/
+
+# Windows
+windows/packages/
+windows/*/x64/
+windows/*/ARM64/
+
+# keystore
+*.keystore
+!debug.keystore

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  windows/RNInoPlayer/RNInoPlayer.vcxproj
+  Visual Studio project for the react-native-ino-player Windows TurboModule.
+
+  Requirements:
+    - Visual Studio 2022 (17.x) or later
+    - Windows 10 SDK 10.0.19041.0 or later
+    - C++/WinRT (included with the SDK)
+    - React Native Windows >= 0.74.0
+    - NuGet packages: Microsoft.ReactNative.Cxx, Microsoft.Windows.CppWinRT
+
+  HOST APP SETUP:
+    1. Add this project to your solution:
+         File → Add → Existing Project → windows/RNInoPlayer/RNInoPlayer.vcxproj
+
+    2. Add a reference from your app project to RNInoPlayer:
+         App project → References → Add Reference → RNInoPlayer
+
+    3. Register the package provider in your app's App.cpp:
+         #include <winrt/RNInoPlayer.h>
+
+         // In App::App():
+         PackageProviders().Append(
+           winrt::make<winrt::RNInoPlayer::ReactPackageProvider>());
+
+    4. Add Windows capabilities to your app's Package.appxmanifest:
+         <Capability Name="internetClient" />
+         <DeviceCapability Name="microphone" />  <!-- if using mic input -->
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+          Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+    <RootNamespace>RNInoPlayer</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>false</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.19041.0</WindowsTargetPlatformMinVersion>
+    <Platform>x64</Platform>
+    <XamlLanguage>CppWinRT</XamlLanguage>
+    <CppWinRTOptimized>true</CppWinRTOptimized>
+    <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
+    <CppWinRTGenerateWindowsMetadata>true</CppWinRTGenerateWindowsMetadata>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <PropertyGroup Label="UserMacros" />
+
+  <!-- ── Compiler / linker settings ──────────────────────────────────────── -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>
+        $(ProjectDir);
+        $(SolutionDir)\node_modules\react-native-windows\;
+        $(SolutionDir)\node_modules\react-native-windows\ReactCommon;
+        $(SolutionDir)\node_modules\react-native-windows\ReactWindowsCore;
+        %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>
+        WINAPI_FAMILY=WINAPI_FAMILY_APP;
+        __WRL_NO_DEFAULT_LIB__;
+        WIN32_LEAN_AND_MEAN;
+        NOMINMAX;
+        %(PreprocessorDefinitions)
+      </PreprocessorDefinitions>
+      <AdditionalOptions>/await /std:c++20 %(AdditionalOptions)</AdditionalOptions>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- ── Source files ──────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="InoPlayerModule.cpp" />
+    <ClCompile Include="ReactPackageProvider.cpp" />
+    <ClCompile Include="WindowsQueueManager.cpp" />
+  </ItemGroup>
+
+  <!-- ── Header files ──────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="InoPlayerModule.h" />
+    <ClInclude Include="ReactPackageProvider.h" />
+    <ClInclude Include="WindowsQueueManager.h" />
+  </ItemGroup>
+
+  <!-- ── NuGet packages ────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ReactNative.Cxx">
+      <Version>0.74.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.CppWinRT">
+      <Version>2.0.230706.1</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
+</Project>

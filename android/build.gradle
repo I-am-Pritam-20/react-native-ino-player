@@ -39,6 +39,11 @@ android {
   defaultConfig {
     minSdkVersion getExtOrDefault("minSdkVersion")
   }
+  buildFeatures { buildConfig = true }
+  kotlinOptions {
+      jvmTarget = "17"
+      freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
+  }
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_17
@@ -46,6 +51,31 @@ android {
   }
 }
 
+val media3Version   = "1.10.0"
+val castVersion     = "21.5.0"
+val carAppVersion   = "1.4.0"
+val wearableVersion = "18.0.0"
+
 dependencies {
   implementation "com.facebook.react:react-android"
+  api("androidx.media3:media3-exoplayer:$media3Version")
+    api("androidx.media3:media3-exoplayer-hls:$media3Version")
+    api("androidx.media3:media3-exoplayer-dash:$media3Version")
+    api("androidx.media3:media3-exoplayer-smoothstreaming:$media3Version")
+    api("androidx.media3:media3-exoplayer-rtsp:$media3Version")
+    api("androidx.media3:media3-session:$media3Version")
+    api("androidx.media3:media3-datasource-okhttp:$media3Version")
+    api("androidx.media3:media3-database:$media3Version")
+    api("androidx.media3:media3-ui:$media3Version")
+    compileOnly("androidx.media3:media3-cast:$media3Version")
+    api("androidx.car.app:app:$carAppVersion")
+    api("androidx.car.app:app-projected:$carAppVersion")
+    compileOnly("androidx.car.app:app-automotive:$carAppVersion")
+    compileOnly("com.google.android.gms:play-services-wearable:$wearableVersion")
+    compileOnly("com.google.android.gms:play-services-cast-framework:$castVersion")
+    compileOnly("androidx.leanback:leanback:1.2.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.8.1")
+    implementation("com.google.guava:guava:33.2.1-android")
 }

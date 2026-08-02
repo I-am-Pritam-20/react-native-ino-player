@@ -1,3 +1,9 @@
 *.pbxproj -text
 # specific for windows script files
 *.bat text eol=crlf
+* text=auto eol=lf
+*.swift linguist-language=Swift
+*.kt linguist-language=Kotlin
+*.mm linguist-language=Objective-C++
+*.h linguist-language=Objective-C
+*.cpp linguist-language=C++
