@@ -20,9 +20,9 @@ export type BridgeTrack = Readonly<{
   contentType?: string;
   localUri?: string;
   type?: string;
-  headers?: string;       // JSON-stringified Record<string,string>
+  headers?: string; // JSON-stringified Record<string,string>
   pitchAlgorithm?: string;
-  userInfoJson?: string;  // JSON-stringified Record<string,unknown>
+  userInfoJson?: string; // JSON-stringified Record<string,unknown>
 }>;
 
 export type BridgePlayerOptions = Readonly<{
@@ -147,7 +147,10 @@ export interface Spec extends TurboModule {
   showCastDialog(): Promise<void>;
 
   // Car
-  provideCarBrowseItems(parentId: string, items: BridgeCarItem[]): Promise<void>;
+  provideCarBrowseItems(
+    parentId: string,
+    items: BridgeCarItem[]
+  ): Promise<void>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('RNInoPlayer');
