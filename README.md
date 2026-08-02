@@ -1,6 +1,6 @@
 # React Native Ino Player
 
-<a href="https://www.npmjs.com/package/react-native-ino-player"><img width="100%" height="35%" alt="github-banner" src="https://github.com/user-attachments/assets/78b2e5ec-5b57-48c0-b984-69cb57cbcf26" /></a>
+<a href="https://www.npmjs.com/package/react-native-ino-player"><img width="100%" height="35%" alt="react-native-ino-player-github-banner" src="https://github.com/user-attachments/assets/ddc372a0-220a-48f1-a0fa-d711be76d4ad" /></a>
 <br></br>
 
 > A full-featured audio/video media player for **React Native** — built on the **New Architecture** (TurboModule + Bridgeless, RN ≥ 0.74).
