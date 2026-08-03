@@ -26,7 +26,10 @@ let mod;
 try {
   mod = require(path.join(__dirname, '../lib/commonjs/index.js'));
 } catch (e) {
-  console.error('Could not load lib/commonjs/index.js — run `yarn build` first',e);
+  console.error(
+    'Could not load lib/commonjs/index.js — run `yarn build` first',
+    e
+  );
   process.exit(1);
 }
 let failed = false;
