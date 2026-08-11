@@ -55,9 +55,12 @@ export interface EventPayloads {
  */
 export function addEventListener<E extends Event>(
   event: E,
-  listener: (payload: EventPayloads[E]) => void,
+  listener: (payload: EventPayloads[E]) => void
 ): { remove: () => void } {
-  return webEventBus.addListener(event as string, listener as (p: unknown) => void);
+  return webEventBus.addListener(
+    event as string,
+    listener as (p: unknown) => void
+  );
 }
 
 export { Event };

@@ -46,7 +46,6 @@ export interface EventPayloads {
 let _emitter: NativeEventEmitter | null = null;
 function getEmitter(): NativeEventEmitter {
   if (!_emitter) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     _emitter = new NativeEventEmitter(NativeInoPlayer as any);
   }
   return _emitter;

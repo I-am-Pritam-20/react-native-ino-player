@@ -1,8 +1,17 @@
 package com.inoplayer.cast
-import android.content.Context; import android.util.Log
-import androidx.annotation.OptIn; import androidx.media3.cast.CastPlayer; import androidx.media3.cast.SessionAvailabilityListener; import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer; import com.facebook.react.bridge.Arguments; import com.facebook.react.bridge.WritableMap
+
+import android.content.Context
+import android.util.Log
+import androidx.annotation.OptIn
+import androidx.media3.cast.CastPlayer
+import androidx.media3.cast.SessionAvailabilityListener
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.WritableMap
 import com.google.android.gms.cast.framework.*
+import com.google.android.gms.cast.framework.media.CastMediaControlIntent
+
 typealias CastEmitter = (event: String, payload: WritableMap?) -> Unit
 @OptIn(UnstableApi::class)
 class InoCastManager(private val context: Context, private val emitter: CastEmitter) {
@@ -25,7 +34,7 @@ class InoCastManager(private val context: Context, private val emitter: CastEmit
     fun release() { castPlayer?.setSessionAvailabilityListener(null); castPlayer?.release(); castPlayer = null }
 }
 open class InoCastOptionsProvider : OptionsProvider {
-    open fun getReceiverApplicationId() = com.google.android.gms.cast.framework.media.CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID
+    open fun getReceiverApplicationId() = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID
     override fun getCastOptions(context: Context) = CastOptions.Builder().setReceiverApplicationId(getReceiverApplicationId()).build()
     override fun getAdditionalSessionProviders(context: Context) = null
 }

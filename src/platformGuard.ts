@@ -39,16 +39,19 @@ export class UnsupportedPlatformError extends Error {
   constructor(methodName: string) {
     const platform = Platform.OS;
     const guide: Record<string, string> = {
-      macos:   'Use Mac Catalyst (ios target) instead of the native macOS AppKit target.',
-      tvos:    'A separate Apple TV target with tvOS-specific AVPlayer setup is needed.',
+      macos:
+        'Use Mac Catalyst (ios target) instead of the native macOS AppKit target.',
+      tvos: 'A separate Apple TV target with tvOS-specific AVPlayer setup is needed.',
       watchos: 'watchOS uses WKAudioFileQueuePlayer — a different API.',
     };
-    const hint = guide[platform] ?? 'This platform is not supported by react-native-ino-player.';
+    const hint =
+      guide[platform] ??
+      'This platform is not supported by react-native-ino-player.';
 
     super(
       `[InoPlayer] \`${methodName}\` is not supported on platform "${platform}".\n` +
-      `Supported platforms: android (API 26+), ios (iOS 13+), web, windows (RN Windows 0.74+).\n` +
-      hint
+        `Supported platforms: android (API 26+), ios (iOS 13+), web, windows (RN Windows 0.74+).\n` +
+        hint
     );
     this.name = 'UnsupportedPlatformError';
   }
@@ -63,7 +66,9 @@ export function noOpProxy<T extends object>(name: string): T {
     get(_target, prop) {
       if (prop === 'then') return undefined;
       return (..._args: unknown[]) => {
-        console.warn(`[InoPlayer] \`${name}.${String(prop)}\` is a no-op on "${Platform.OS}".`);
+        console.warn(
+          `[InoPlayer] \`${name}.${String(prop)}\` is a no-op on "${Platform.OS}".`
+        );
         return Promise.resolve(undefined);
       };
     },

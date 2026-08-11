@@ -29,14 +29,19 @@ export function usePlaybackState(): {
   useEffect(() => {
     let cancelled = false;
     InoPlayer.getState()
-      .then(s => { if (!cancelled) setValue({ state: s }); })
+      .then((s) => {
+        if (!cancelled) setValue({ state: s });
+      })
       .catch(() => {});
 
-    const sub = addEventListener(Event.PlaybackState, p => {
+    const sub = addEventListener(Event.PlaybackState, (p) => {
       setValue({ state: p.state as State, error: p.error });
     });
 
-    return () => { cancelled = true; sub.remove(); };
+    return () => {
+      cancelled = true;
+      sub.remove();
+    };
   }, []);
 
   return value;
@@ -44,7 +49,10 @@ export function usePlaybackState(): {
 
 // ─── useIsPlaying ─────────────────────────────────────────────────────────────
 
-export function useIsPlaying(): { playing: boolean; bufferingDuringPlay: boolean } {
+export function useIsPlaying(): {
+  playing: boolean;
+  bufferingDuringPlay: boolean;
+} {
   const { state } = usePlaybackState();
   return {
     playing: state === State.Playing,
@@ -56,19 +64,32 @@ export function useIsPlaying(): { playing: boolean; bufferingDuringPlay: boolean
 
 export function useProgress(updateInterval = 1000): Progress {
   const [progress, setProgress] = useState<Progress>({
-    position: 0, duration: 0, buffered: 0,
+    position: 0,
+    duration: 0,
+    buffered: 0,
   });
 
   useEffect(() => {
-    const sub = addEventListener(Event.PlaybackProgressUpdated, p => {
-      setProgress({ position: p.position, duration: p.duration, buffered: p.buffered });
+    const sub = addEventListener(Event.PlaybackProgressUpdated, (p) => {
+      setProgress({
+        position: p.position,
+        duration: p.duration,
+        buffered: p.buffered,
+      });
     });
 
     const timer = setInterval(async () => {
-      try { setProgress(await InoPlayer.getProgress()); } catch { /* ignore */ }
+      try {
+        setProgress(await InoPlayer.getProgress());
+      } catch {
+        /* ignore */
+      }
     }, updateInterval);
 
-    return () => { sub.remove(); clearInterval(timer); };
+    return () => {
+      sub.remove();
+      clearInterval(timer);
+    };
   }, [updateInterval]);
 
   return progress;
@@ -82,14 +103,19 @@ export function useActiveTrack(): Track | undefined {
   useEffect(() => {
     let cancelled = false;
     InoPlayer.getActiveTrack()
-      .then(t => { if (!cancelled) setTrack(t ?? undefined); })
+      .then((t) => {
+        if (!cancelled) setTrack(t ?? undefined);
+      })
       .catch(() => {});
 
-    const sub = addEventListener(Event.PlaybackActiveTrackChanged, p => {
+    const sub = addEventListener(Event.PlaybackActiveTrackChanged, (p) => {
       setTrack(p.track ?? undefined);
     });
 
-    return () => { cancelled = true; sub.remove(); };
+    return () => {
+      cancelled = true;
+      sub.remove();
+    };
   }, []);
 
   return track;
@@ -101,7 +127,11 @@ export function useQueue(): Track[] {
   const [queue, setQueue] = useState<Track[]>([]);
 
   const refresh = useCallback(async () => {
-    try { setQueue(await InoPlayer.getQueue()); } catch { /* ignore */ }
+    try {
+      setQueue(await InoPlayer.getQueue());
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   useEffect(() => {
@@ -110,7 +140,7 @@ export function useQueue(): Track[] {
       addEventListener(Event.PlaybackActiveTrackChanged, refresh),
       addEventListener(Event.PlaybackQueueEnded, refresh),
     ];
-    return () => subs.forEach(s => s.remove());
+    return () => subs.forEach((s) => s.remove());
   }, [refresh]);
 
   return queue;
@@ -136,7 +166,9 @@ export function useShuffle(): {
   );
 
   useEffect(() => {
-    InoPlayer.getShuffle().then(setLocalShuffle).catch(() => {});
+    InoPlayer.getShuffle()
+      .then(setLocalShuffle)
+      .catch(() => {});
 
     const sub = addEventListener(Event.RemoteShuffle, async () => {
       const current = await InoPlayer.getShuffle().catch(() => false);
@@ -157,7 +189,10 @@ export function useRepeatMode(): {
   cycleRepeatMode: () => Promise<void>;
 } {
   const CYCLE: RepeatMode[] = [
-    RepeatMode.Off, RepeatMode.Track, RepeatMode.TrackOnce, RepeatMode.Queue,
+    RepeatMode.Off,
+    RepeatMode.Track,
+    RepeatMode.TrackOnce,
+    RepeatMode.Queue,
   ];
   const [repeatMode, setLocalRepeat] = useState<RepeatMode>(RepeatMode.Off);
 
@@ -167,16 +202,18 @@ export function useRepeatMode(): {
   }, []);
 
   const cycleRepeatMode = useCallback(async () => {
-    setLocalRepeat(prev => {
+    setLocalRepeat((prev) => {
       const next = CYCLE[(CYCLE.indexOf(prev) + 1) % CYCLE.length]!;
       InoPlayer.setRepeatMode(next).catch(() => {});
       return next;
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    InoPlayer.getRepeatMode().then(setLocalRepeat).catch(() => {});
+    InoPlayer.getRepeatMode()
+      .then(setLocalRepeat)
+      .catch(() => {});
     const sub = addEventListener(Event.RemoteRepeat, cycleRepeatMode);
     return () => sub.remove();
   }, [cycleRepeatMode]);
@@ -199,10 +236,19 @@ export function useSleepTimer(): {
   }, []);
 
   useEffect(() => {
-    InoPlayer.getSleepTimerRemaining().then(setRemaining).catch(() => {});
-    const tickSub = addEventListener(Event.SleepTimerTick, p => setRemaining(p.remaining));
-    const fireSub = addEventListener(Event.SleepTimerFired, () => setRemaining(-1));
-    return () => { tickSub.remove(); fireSub.remove(); };
+    InoPlayer.getSleepTimerRemaining()
+      .then(setRemaining)
+      .catch(() => {});
+    const tickSub = addEventListener(Event.SleepTimerTick, (p) =>
+      setRemaining(p.remaining)
+    );
+    const fireSub = addEventListener(Event.SleepTimerFired, () =>
+      setRemaining(-1)
+    );
+    return () => {
+      tickSub.remove();
+      fireSub.remove();
+    };
   }, []);
 
   return { remaining, active: remaining >= 0, cancel };
@@ -211,10 +257,14 @@ export function useSleepTimer(): {
 // ─── useCastState ─────────────────────────────────────────────────────────────
 
 export function useCastState(): CastStateInfo {
-  const [info, setInfo] = useState<CastStateInfo>({ state: CastState.NoDevices });
+  const [info, setInfo] = useState<CastStateInfo>({
+    state: CastState.NoDevices,
+  });
 
   useEffect(() => {
-    InoPlayer.getCastState().then(setInfo).catch(() => {});
+    InoPlayer.getCastState()
+      .then(setInfo)
+      .catch(() => {});
     const sub = addEventListener(Event.CastStateChanged, setInfo);
     return () => sub.remove();
   }, []);
@@ -229,7 +279,7 @@ export function useRemoteCustomAction(id: string, handler: () => void): void {
   handlerRef.current = handler;
 
   useEffect(() => {
-    const sub = addEventListener(Event.RemoteCustomAction, p => {
+    const sub = addEventListener(Event.RemoteCustomAction, (p) => {
       if (p.id === id) handlerRef.current();
     });
     return () => sub.remove();

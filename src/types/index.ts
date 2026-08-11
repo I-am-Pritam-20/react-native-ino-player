@@ -31,14 +31,14 @@ export interface Track {
 // ─── State ───────────────────────────────────────────────────────────────────
 
 export enum State {
-  None      = 'none',
-  Ready     = 'ready',
-  Playing   = 'playing',
-  Paused    = 'paused',
+  None = 'none',
+  Ready = 'ready',
+  Playing = 'playing',
+  Paused = 'paused',
   Buffering = 'buffering',
-  Loading   = 'loading',
-  Ended     = 'ended',
-  Error     = 'error',
+  Loading = 'loading',
+  Ended = 'ended',
+  Error = 'error',
 }
 
 export interface PlaybackError {
@@ -62,25 +62,25 @@ export interface Progress {
 // ─── Repeat mode ─────────────────────────────────────────────────────────────
 
 export enum RepeatMode {
-  Off       = 'off',
-  Track     = 'track',
+  Off = 'off',
+  Track = 'track',
   TrackOnce = 'track-once',
-  Queue     = 'queue',
+  Queue = 'queue',
 }
 
 // ─── Capability ──────────────────────────────────────────────────────────────
 
 export enum Capability {
-  Play           = 'play',
-  Pause          = 'pause',
-  Stop           = 'stop',
-  SeekTo         = 'seekTo',
-  SkipToNext     = 'skipToNext',
+  Play = 'play',
+  Pause = 'pause',
+  Stop = 'stop',
+  SeekTo = 'seekTo',
+  SkipToNext = 'skipToNext',
   SkipToPrevious = 'skipToPrevious',
-  JumpForward    = 'jumpForward',
-  JumpBackward   = 'jumpBackward',
-  Shuffle        = 'shuffle',
-  Repeat         = 'repeat',
+  JumpForward = 'jumpForward',
+  JumpBackward = 'jumpBackward',
+  Shuffle = 'shuffle',
+  Repeat = 'repeat',
 }
 
 // ─── Custom action ────────────────────────────────────────────────────────────
@@ -116,8 +116,16 @@ export interface PlayerOptions {
   };
   ios?: {
     audioCategory?: 'playback' | 'ambient' | 'soloAmbient';
-    audioMode?: 'default' | 'moviePlayback' | 'spokenAudio' | 'voiceChat'
-      | 'measurement' | 'videoChat' | 'videoRecording' | 'voicePrompt' | 'gameChat';
+    audioMode?:
+      | 'default'
+      | 'moviePlayback'
+      | 'spokenAudio'
+      | 'voiceChat'
+      | 'measurement'
+      | 'videoChat'
+      | 'videoRecording'
+      | 'voicePrompt'
+      | 'gameChat';
   };
 }
 
@@ -146,10 +154,10 @@ export interface SleepTimerConfig {
 // ─── Cast ─────────────────────────────────────────────────────────────────────
 
 export enum CastState {
-  NoDevices    = 'no_devices',
+  NoDevices = 'no_devices',
   NotConnected = 'not_connected',
-  Connecting   = 'connecting',
-  Connected    = 'connected',
+  Connecting = 'connecting',
+  Connected = 'connected',
 }
 
 export interface CastStateInfo {
@@ -160,26 +168,26 @@ export interface CastStateInfo {
 // ─── Events ───────────────────────────────────────────────────────────────────
 
 export enum Event {
-  PlaybackState              = 'playback-state',
-  PlaybackError              = 'playback-error',
+  PlaybackState = 'playback-state',
+  PlaybackError = 'playback-error',
   PlaybackActiveTrackChanged = 'playback-active-track-changed',
-  PlaybackQueueEnded         = 'playback-queue-ended',
-  PlaybackProgressUpdated    = 'playback-progress-updated',
-  SleepTimerFired            = 'sleep-timer-fired',
-  SleepTimerTick             = 'sleep-timer-tick',
-  RemotePlay                 = 'remote-play',
-  RemotePause                = 'remote-pause',
-  RemoteStop                 = 'remote-stop',
-  RemoteNext                 = 'remote-next',
-  RemotePrevious             = 'remote-previous',
-  RemoteSeek                 = 'remote-seek',
-  RemoteJumpForward          = 'remote-jump-forward',
-  RemoteJumpBackward         = 'remote-jump-backward',
-  RemoteShuffle              = 'remote-shuffle',
-  RemoteRepeat               = 'remote-repeat',
-  RemoteCustomAction         = 'remote-custom-action',
-  CastStateChanged           = 'cast-state-changed',
-  CarBrowseItemSelected      = 'car-browse-item-selected',
+  PlaybackQueueEnded = 'playback-queue-ended',
+  PlaybackProgressUpdated = 'playback-progress-updated',
+  SleepTimerFired = 'sleep-timer-fired',
+  SleepTimerTick = 'sleep-timer-tick',
+  RemotePlay = 'remote-play',
+  RemotePause = 'remote-pause',
+  RemoteStop = 'remote-stop',
+  RemoteNext = 'remote-next',
+  RemotePrevious = 'remote-previous',
+  RemoteSeek = 'remote-seek',
+  RemoteJumpForward = 'remote-jump-forward',
+  RemoteJumpBackward = 'remote-jump-backward',
+  RemoteShuffle = 'remote-shuffle',
+  RemoteRepeat = 'remote-repeat',
+  RemoteCustomAction = 'remote-custom-action',
+  CastStateChanged = 'cast-state-changed',
+  CarBrowseItemSelected = 'car-browse-item-selected',
 }
 
 // ─── Car ──────────────────────────────────────────────────────────────────────
@@ -193,5 +201,6 @@ export interface CarMediaItem {
   browsable: boolean;
 }
 
-export type CarBrowseTreeLoader =
-  (parentId: string | null) => Promise<CarMediaItem[]>;
+export type CarBrowseTreeLoader = (
+  parentId: string | null
+) => Promise<CarMediaItem[]>;

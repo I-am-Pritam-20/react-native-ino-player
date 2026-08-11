@@ -65,6 +65,6 @@ export class WebQueue {
   }
 
   indexOf(id: string): number {
-    return this._tracks.findIndex(t => t.id === id);
+    return this._tracks.findIndex((t) => t.id === id);
   }
 }

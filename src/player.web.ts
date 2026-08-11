@@ -25,7 +25,6 @@ import { State, RepeatMode, CastState, Capability, Event } from './types';
 import { isPlatformSupported } from './platformGuard';
 
 export const InoPlayer = {
-
   // ── Lifecycle ──────────────────────────────────────────────────────────────
 
   async setupPlayer(options: PlayerOptions = {}): Promise<void> {
@@ -65,7 +64,7 @@ export const InoPlayer = {
 
   async updateMetadataForTrack(
     index: number,
-    metadata: Partial<Omit<Track, 'id'>>,
+    metadata: Partial<Omit<Track, 'id'>>
   ): Promise<void> {
     return webPlayer.updateMetadataForTrack(index, metadata);
   },
@@ -156,7 +155,10 @@ export const InoPlayer = {
 
   // ── Preloading / caching ───────────────────────────────────────────────────
 
-  async preloadTrack(url: string, headers: Record<string, string> = {}): Promise<void> {
+  async preloadTrack(
+    url: string,
+    headers: Record<string, string> = {}
+  ): Promise<void> {
     return webPlayer.preloadTrack(url, headers);
   },
 

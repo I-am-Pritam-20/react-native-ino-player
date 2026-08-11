@@ -15,7 +15,7 @@ export const webEventBus = {
     const set = _listeners.get(event);
     if (!set) return;
     // Copy before iterating so removeListener inside a handler is safe
-    [...set].forEach(l => l(payload));
+    [...set].forEach((l) => l(payload));
   },
 
   addListener(event: string, listener: Listener): { remove: () => void } {

@@ -7,9 +7,15 @@
 import NativeInoPlayer from '../specs/NativeInoPlayer';
 import { assertPlatformSupported } from './platformGuard';
 import type {
-  Track, PlayerOptions, UpdateOptions, Progress,
-  CustomAction, SleepTimerConfig, CastStateInfo,
-  CarMediaItem, CarBrowseTreeLoader,
+  Track,
+  PlayerOptions,
+  UpdateOptions,
+  Progress,
+  CustomAction,
+  SleepTimerConfig,
+  CastStateInfo,
+  CarMediaItem,
+  CarBrowseTreeLoader,
 } from './types';
 import { State, RepeatMode, CastState, Capability, Event } from './types';
 import { addEventListener } from './events';
@@ -18,10 +24,17 @@ import { addEventListener } from './events';
 
 function trackToBridge(t: Track) {
   return {
-    id: t.id, url: t.url, title: t.title,
-    artist: t.artist, album: t.album, artwork: t.artwork,
-    duration: t.duration, contentType: t.contentType, localUri: t.localUri,
-    type: t.type, pitchAlgorithm: t.pitchAlgorithm,
+    id: t.id,
+    url: t.url,
+    title: t.title,
+    artist: t.artist,
+    album: t.album,
+    artwork: t.artwork,
+    duration: t.duration,
+    contentType: t.contentType,
+    localUri: t.localUri,
+    type: t.type,
+    pitchAlgorithm: t.pitchAlgorithm,
     headers: t.headers ? JSON.stringify(t.headers) : undefined,
     userInfoJson: t.userInfo ? JSON.stringify(t.userInfo) : undefined,
   };
@@ -30,38 +43,60 @@ function trackToBridge(t: Track) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function bridgeToTrack(b: any): Track {
   return {
-    id: b.id, url: b.url, title: b.title,
-    artist: b.artist, album: b.album, artwork: b.artwork,
-    duration: b.duration, contentType: b.contentType as 'audio' | 'video' | undefined,
-    localUri: b.localUri, type: b.type,
-    pitchAlgorithm: b.pitchAlgorithm as 'linear' | 'music' | 'voice' | undefined,
-    headers: b.headers ? JSON.parse(b.headers) as Record<string, string> : undefined,
-    userInfo: b.userInfoJson ? JSON.parse(b.userInfoJson) as Record<string, unknown> : undefined,
+    id: b.id,
+    url: b.url,
+    title: b.title,
+    artist: b.artist,
+    album: b.album,
+    artwork: b.artwork,
+    duration: b.duration,
+    contentType: b.contentType as 'audio' | 'video' | undefined,
+    localUri: b.localUri,
+    type: b.type,
+    pitchAlgorithm: b.pitchAlgorithm as
+      'linear' | 'music' | 'voice' | undefined,
+    headers: b.headers
+      ? (JSON.parse(b.headers) as Record<string, string>)
+      : undefined,
+    userInfo: b.userInfoJson
+      ? (JSON.parse(b.userInfoJson) as Record<string, unknown>)
+      : undefined,
   };
 }
 
 function optsToBridge(o: PlayerOptions) {
   return {
-    minBufferMs: o.minBufferMs, maxBufferMs: o.maxBufferMs,
-    backBufferMs: o.backBufferMs, maxCacheSize: o.maxCacheSize,
-    preloadWindowSize: o.preloadWindowSize, backgroundAudio: o.backgroundAudio,
+    minBufferMs: o.minBufferMs,
+    maxBufferMs: o.maxBufferMs,
+    backBufferMs: o.backBufferMs,
+    maxCacheSize: o.maxCacheSize,
+    preloadWindowSize: o.preloadWindowSize,
+    backgroundAudio: o.backgroundAudio,
     handleAudioBecomingNoisy: o.handleAudioBecomingNoisy,
     androidNotificationChannelName: o.android?.notificationChannelName,
-    androidWakeMode: o.android?.wakeMode, androidSmallIcon: o.android?.smallIcon,
-    iosAudioCategory: o.ios?.audioCategory, iosAudioMode: o.ios?.audioMode,
+    androidWakeMode: o.android?.wakeMode,
+    androidSmallIcon: o.android?.smallIcon,
+    iosAudioCategory: o.ios?.audioCategory,
+    iosAudioMode: o.ios?.audioMode,
   };
 }
 
 function updateOptsToBridge(o: UpdateOptions) {
   return {
     capabilitiesJson: JSON.stringify(o.capabilities ?? []),
-    compactCapabilitiesJson: o.compactCapabilities ? JSON.stringify(o.compactCapabilities) : undefined,
-    notificationCapabilitiesJson: o.notificationCapabilities ? JSON.stringify(o.notificationCapabilities) : undefined,
+    compactCapabilitiesJson: o.compactCapabilities
+      ? JSON.stringify(o.compactCapabilities)
+      : undefined,
+    notificationCapabilitiesJson: o.notificationCapabilities
+      ? JSON.stringify(o.notificationCapabilities)
+      : undefined,
     progressUpdateEventInterval: o.progressUpdateEventInterval,
     jumpForwardInterval: o.jumpForwardInterval,
     jumpBackwardInterval: o.jumpBackwardInterval,
     customActionsJson: o.customActions
-      ? JSON.stringify(o.customActions.map(a => ({ ...a, showIn: a.showIn ?? 'both' })))
+      ? JSON.stringify(
+          o.customActions.map((a) => ({ ...a, showIn: a.showIn ?? 'both' }))
+        )
       : undefined,
   };
 }
@@ -78,18 +113,26 @@ function ensureCarListener(): void {
     if (!_carLoader) return;
     try {
       const items = await _carLoader(parentId);
-      await NativeInoPlayer.provideCarBrowseItems(id, items.map(item => ({
-        id: item.id, title: item.title, subtitle: item.subtitle,
-        artworkUri: item.artworkUri, playable: item.playable, browsable: item.browsable,
-      })));
-    } catch (e) { console.warn('[InoPlayer] CarBrowseTreeLoader error:', e); }
+      await NativeInoPlayer.provideCarBrowseItems(
+        id,
+        items.map((item) => ({
+          id: item.id,
+          title: item.title,
+          subtitle: item.subtitle,
+          artworkUri: item.artworkUri,
+          playable: item.playable,
+          browsable: item.browsable,
+        }))
+      );
+    } catch (e) {
+      console.warn('[InoPlayer] CarBrowseTreeLoader error:', e);
+    }
   });
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 export const InoPlayer = {
-
   async setupPlayer(options: PlayerOptions = {}): Promise<void> {
     assertPlatformSupported('setupPlayer');
     await NativeInoPlayer.setupPlayer(optsToBridge(options));
@@ -107,7 +150,12 @@ export const InoPlayer = {
 
   async setCustomActions(actions: CustomAction[]): Promise<void> {
     return NativeInoPlayer.setCustomActions(
-      actions.map(a => ({ id: a.id, title: a.title, icon: a.icon, showIn: a.showIn ?? 'both' }))
+      actions.map((a) => ({
+        id: a.id,
+        title: a.title,
+        icon: a.icon,
+        showIn: a.showIn ?? 'both',
+      }))
     );
   },
 
@@ -121,19 +169,29 @@ export const InoPlayer = {
     return NativeInoPlayer.add(arr.map(trackToBridge), insertBeforeIndex);
   },
 
-  async remove(index: number): Promise<void> { return NativeInoPlayer.remove(index); },
+  async remove(index: number): Promise<void> {
+    return NativeInoPlayer.remove(index);
+  },
 
   async move(fromIndex: number, toIndex: number): Promise<void> {
     return NativeInoPlayer.move(fromIndex, toIndex);
   },
 
-  async updateMetadataForTrack(index: number, metadata: Partial<Omit<Track, 'id'>>): Promise<void> {
+  async updateMetadataForTrack(
+    index: number,
+    metadata: Partial<Omit<Track, 'id'>>
+  ): Promise<void> {
     const existing = await InoPlayer.getTrackAt(index);
     if (!existing) throw new Error(`[InoPlayer] No track at index ${index}`);
-    return NativeInoPlayer.updateMetadataForTrack(index, trackToBridge({ ...existing, ...metadata }));
+    return NativeInoPlayer.updateMetadataForTrack(
+      index,
+      trackToBridge({ ...existing, ...metadata })
+    );
   },
 
-  async clearQueue(): Promise<void> { return NativeInoPlayer.clearQueue(); },
+  async clearQueue(): Promise<void> {
+    return NativeInoPlayer.clearQueue();
+  },
 
   // Navigation
   async skip(index: number, initialPosition = 0): Promise<void> {
@@ -148,17 +206,35 @@ export const InoPlayer = {
     return NativeInoPlayer.skipToPrevious(initialPosition);
   },
 
-  async skipForward(seconds: number): Promise<void> { return NativeInoPlayer.seekBy(seconds); },
-  async skipBackward(seconds: number): Promise<void> { return NativeInoPlayer.seekBy(-seconds); },
+  async skipForward(seconds: number): Promise<void> {
+    return NativeInoPlayer.seekBy(seconds);
+  },
+  async skipBackward(seconds: number): Promise<void> {
+    return NativeInoPlayer.seekBy(-seconds);
+  },
 
   // Transport
-  async play(): Promise<void>   { return NativeInoPlayer.play(); },
-  async pause(): Promise<void>  { return NativeInoPlayer.pause(); },
-  async stop(): Promise<void>   { return NativeInoPlayer.stop(); },
-  async seekTo(position: number): Promise<void> { return NativeInoPlayer.seekTo(position); },
-  async seekBy(offset: number): Promise<void>   { return NativeInoPlayer.seekBy(offset); },
-  async setRate(rate: number): Promise<void>    { return NativeInoPlayer.setRate(rate); },
-  async setVolume(volume: number): Promise<void>{ return NativeInoPlayer.setVolume(volume); },
+  async play(): Promise<void> {
+    return NativeInoPlayer.play();
+  },
+  async pause(): Promise<void> {
+    return NativeInoPlayer.pause();
+  },
+  async stop(): Promise<void> {
+    return NativeInoPlayer.stop();
+  },
+  async seekTo(position: number): Promise<void> {
+    return NativeInoPlayer.seekTo(position);
+  },
+  async seekBy(offset: number): Promise<void> {
+    return NativeInoPlayer.seekBy(offset);
+  },
+  async setRate(rate: number): Promise<void> {
+    return NativeInoPlayer.setRate(rate);
+  },
+  async setVolume(volume: number): Promise<void> {
+    return NativeInoPlayer.setVolume(volume);
+  },
 
   async fadeVolumeTo(targetVolume: number, durationMs: number): Promise<void> {
     return NativeInoPlayer.fadeVolumeTo(targetVolume, durationMs);
@@ -169,37 +245,62 @@ export const InoPlayer = {
     return NativeInoPlayer.setRepeatMode(mode as string);
   },
 
-  async setShuffle(enabled: boolean): Promise<void> { return NativeInoPlayer.setShuffle(enabled); },
+  async setShuffle(enabled: boolean): Promise<void> {
+    return NativeInoPlayer.setShuffle(enabled);
+  },
 
   // Sleep timer
   async setSleepTimer(config: SleepTimerConfig = {}): Promise<void> {
     return NativeInoPlayer.setSleepTimer({
-      duration: config.duration ?? -1, mode: config.mode ?? 'countdown',
-      fadeOut: config.fadeOut ?? true, fadeDuration: config.fadeDuration ?? 10,
+      duration: config.duration ?? -1,
+      mode: config.mode ?? 'countdown',
+      fadeOut: config.fadeOut ?? true,
+      fadeDuration: config.fadeDuration ?? 10,
     });
   },
 
-  async cancelSleepTimer(): Promise<void> { return NativeInoPlayer.cancelSleepTimer(); },
-  async getSleepTimerRemaining(): Promise<number> { return NativeInoPlayer.getSleepTimerRemaining(); },
+  async cancelSleepTimer(): Promise<void> {
+    return NativeInoPlayer.cancelSleepTimer();
+  },
+  async getSleepTimerRemaining(): Promise<number> {
+    return NativeInoPlayer.getSleepTimerRemaining();
+  },
 
   // Cache
-  async preloadTrack(url: string, headers: Record<string, string> = {}): Promise<void> {
+  async preloadTrack(
+    url: string,
+    headers: Record<string, string> = {}
+  ): Promise<void> {
     return NativeInoPlayer.preloadTrack(url, JSON.stringify(headers));
   },
-  async clearCache(): Promise<void> { return NativeInoPlayer.clearCache(); },
-  async getCacheSize(): Promise<number> { return NativeInoPlayer.getCacheSize(); },
+  async clearCache(): Promise<void> {
+    return NativeInoPlayer.clearCache();
+  },
+  async getCacheSize(): Promise<number> {
+    return NativeInoPlayer.getCacheSize();
+  },
 
   // Getters
-  async getState(): Promise<State> { return (await NativeInoPlayer.getState()) as State; },
-  async getProgress(): Promise<Progress> { return NativeInoPlayer.getProgress(); },
-  async getRate(): Promise<number>   { return NativeInoPlayer.getRate(); },
-  async getVolume(): Promise<number> { return NativeInoPlayer.getVolume(); },
+  async getState(): Promise<State> {
+    return (await NativeInoPlayer.getState()) as State;
+  },
+  async getProgress(): Promise<Progress> {
+    return NativeInoPlayer.getProgress();
+  },
+  async getRate(): Promise<number> {
+    return NativeInoPlayer.getRate();
+  },
+  async getVolume(): Promise<number> {
+    return NativeInoPlayer.getVolume();
+  },
 
   async getRepeatMode(): Promise<RepeatMode> {
     return (await NativeInoPlayer.getRepeatMode()) as RepeatMode;
   },
 
-  async getShuffle(): Promise<boolean> { return NativeInoPlayer.getShuffle(); },
+  async getShuffle(): Promise<boolean> {
+    return NativeInoPlayer.getShuffle();
+  },
 
   async getQueue(): Promise<Track[]> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -225,8 +326,12 @@ export const InoPlayer = {
     const raw = await NativeInoPlayer.getCastState();
     return { state: raw.state as CastState, deviceName: raw.deviceName };
   },
-  async showAirPlayPicker(): Promise<void> { return NativeInoPlayer.showAirPlayPicker(); },
-  async showCastDialog(): Promise<void>    { return NativeInoPlayer.showCastDialog(); },
+  async showAirPlayPicker(): Promise<void> {
+    return NativeInoPlayer.showAirPlayPicker();
+  },
+  async showCastDialog(): Promise<void> {
+    return NativeInoPlayer.showCastDialog();
+  },
 
   // Car
   setCarBrowseTreeLoader(loader: CarBrowseTreeLoader | null): void {
@@ -236,7 +341,13 @@ export const InoPlayer = {
 
 export { State, RepeatMode, CastState, Capability, Event };
 export type {
-  Track, PlayerOptions, UpdateOptions, Progress,
-  CustomAction, SleepTimerConfig, CastStateInfo,
-  CarMediaItem, CarBrowseTreeLoader,
+  Track,
+  PlayerOptions,
+  UpdateOptions,
+  Progress,
+  CustomAction,
+  SleepTimerConfig,
+  CastStateInfo,
+  CarMediaItem,
+  CarBrowseTreeLoader,
 };
