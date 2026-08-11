@@ -1,0 +1,14 @@
+{
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "react-native-ino-player": ["../src/index.ts"],
+      "react-native-ino-player/web": ["../src/index.web.ts"]
+    }
+  },
+  "include": ["src", "index.js", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+}

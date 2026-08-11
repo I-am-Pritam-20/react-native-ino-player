@@ -43,8 +43,22 @@
   },
   "keywords": [
     "react-native",
+    "expo",
     "ios",
-    "android"
+    "android",
+    "web",
+    "windows",
+    "media",
+    "media-player",
+    "media-control",
+    "audio",
+    "audio-player",
+    "audio-library",
+    "video-player",
+    "music",
+    "music-player",
+    "ino-player",
+    "track-player"
   ],
   "repository": {
     "type": "git",
