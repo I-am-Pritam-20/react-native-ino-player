@@ -21,6 +21,8 @@
   - [Installation](#installation)
     - [New Architecture](#new-architecture)
     - [Android](#android)
+      - [Using a custom Cast receiver app ID](#using-a-custom-cast-receiver-app-id)
+      - [Usage in Android Auto](#for-android-auto-also-add-to-your-manifest)
     - [iOS](#ios)
     - [Web](#web)
     - [Windows](#windows)
@@ -105,7 +107,7 @@ No extra steps — the library's `AndroidManifest.xml` declares all permissions 
 
 Ensure your app's `build.gradle` has `minSdkVersion = 26`.
 
-For Chromecast support, add to your app's `AndroidManifest.xml`:
+For **Chromecast** support, add to your app's `AndroidManifest.xml`:
 
 ```xml
 <meta-data
@@ -113,7 +115,52 @@ For Chromecast support, add to your app's `AndroidManifest.xml`:
     android:value="com.inoplayer.cast.InoCastOptionsProvider" />
 ```
 
-For Android Auto, also add to your manifest:
+This uses Google's **default Cast receiver** (`CC1AD845`), which works for standard audio/video
+playback without any extra setup.
+ 
+### Using a custom Cast receiver app ID
+ 
+If you have your own Cast receiver app, subclass `InoCastOptionsProvider` in your app's Android
+source and override `getReceiverApplicationId()`:
+ 
+```kotlin
+// android/app/src/main/java/com/yourapp/MyOptionsProvider.kt
+package com.yourapp
+ 
+import com.inoplayer.cast.InoCastOptionsProvider
+ 
+class MyOptionsProvider : InoCastOptionsProvider() {
+    override fun getReceiverApplicationId(): String = "YOUR_CUSTOM_APP_ID"
+}
+```
+ 
+Then point the manifest `meta-data` at your subclass instead:
+ 
+```xml
+<meta-data
+    android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+    android:value="com.yourapp.MyOptionsProvider" />
+```
+ 
+If you need more than just a different app ID (e.g. custom namespaces, launch options), override
+`getCastOptions()` directly:
+ 
+```kotlin
+import android.content.Context
+import com.google.android.gms.cast.framework.CastOptions
+import com.inoplayer.cast.InoCastOptionsProvider
+ 
+class MyOptionsProvider : InoCastOptionsProvider() {
+    override fun getCastOptions(context: Context) =
+        CastOptions.Builder()
+            .setReceiverApplicationId("YOUR_CUSTOM_APP_ID")
+            .setEnableReconnectionService(true)
+            // any other CastOptions here
+            .build()
+}
+```
+
+#### For Android Auto, also add to your manifest:
 
 ```xml
 <meta-data
