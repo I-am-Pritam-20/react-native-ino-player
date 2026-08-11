@@ -258,7 +258,7 @@ export class WebPlayer {
       emit(Event.PlaybackError, {
         code: 'AUTOPLAY_BLOCKED',
         message:
-          'Browser autoplay policy blocked playback. A user gesture is required.',
+          'Browser autoplay policy blocked playback. A user gesture is required.', e
       });
     }
   }

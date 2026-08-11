@@ -1,6 +1,6 @@
 {
   "name": "react-native-ino-player",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": " A full-featured media(audio/video) player for React Native ecosystem. Supports Android, iOS, Web, and Windows (New Architecture).",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
