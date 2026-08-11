@@ -54,9 +54,9 @@ function getEmitter(): NativeEventEmitter {
 
 export function addEventListener<E extends Event>(
   event: E,
-  listener: (payload: EventPayloads[E]) => void,
+  listener: (payload: EventPayloads[E]) => void
 ): { remove: () => void } {
-  const sub = getEmitter().addListener(event as string, listener);
+  const sub = getEmitter().addListener(event as string, listener as any);
   return { remove: () => sub.remove() };
 }
 

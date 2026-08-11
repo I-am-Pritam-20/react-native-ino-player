@@ -85,9 +85,6 @@ export class WebPlayer {
   // ── Volume fade ───────────────────────────────────────────────────────────
   private _fadeTimer: ReturnType<typeof setInterval> | null = null;
 
-  // ── Car browse ────────────────────────────────────────────────────────────
-  private _carLoader: CarBrowseTreeLoader | null = null;
-
   // ── Jump intervals ────────────────────────────────────────────────────────
   private _jumpForward = 30;
   private _jumpBackward = 15;
@@ -488,9 +485,8 @@ export class WebPlayer {
     console.warn('[InoPlayer Web] Chromecast on web requires the Google Cast SDK. See docs/ARCHITECTURE.md.');
   }
 
-  setCarBrowseTreeLoader(loader: CarBrowseTreeLoader | null): void {
-    this._carLoader = loader;
-    // Car integration is not applicable on web — loader is stored but never called.
+  setCarBrowseTreeLoader(_loader: CarBrowseTreeLoader | null): void {
+    // Car integration is not applicable on web — loader is intentionally ignored.
   }
 
   async provideCarBrowseItems(_parentId: string, _items: CarMediaItem[]): Promise<void> {
@@ -549,7 +545,6 @@ export class WebPlayer {
     el.load();
 
     // Emit active track changed
-    const lastIndex = this._currentIndex; // same track, loaded fresh
     emit(Event.PlaybackActiveTrackChanged, {
       index: this._currentIndex,
       track,
@@ -668,11 +663,12 @@ export class WebPlayer {
     // Fisher-Yates shuffle
     for (let i = indices.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [indices[i], indices[j]] = [indices[j], indices[i]];
+      // noUncheckedIndexedAccess: both slots are in-bounds by loop invariant
+      [indices[i], indices[j]] = [indices[j]!, indices[i]!];
     }
     // Ensure current track is first
     const pos = indices.indexOf(this._currentIndex);
-    if (pos > 0) { [indices[0], indices[pos]] = [indices[pos], indices[0]]; }
+    if (pos > 0) { [indices[0], indices[pos]] = [indices[pos]!, indices[0]!]; }
     this._shuffledOrder = indices;
   }
 
@@ -689,8 +685,8 @@ export class WebPlayer {
     const pos   = order.indexOf(this._currentIndex);
     if (pos === -1) return null;
     const next  = pos + 1;
-    if (next < order.length) return order[next];
-    return this._repeatMode === RepeatMode.Queue ? order[0] : null;
+    if (next < order.length) return order[next]!;
+    return this._repeatMode === RepeatMode.Queue ? order[0]! : null;
   }
 
   private _previousIndex(): number | null {
@@ -698,8 +694,8 @@ export class WebPlayer {
     const pos   = order.indexOf(this._currentIndex);
     if (pos === -1) return null;
     const prev  = pos - 1;
-    if (prev >= 0) return order[prev];
-    return this._repeatMode === RepeatMode.Queue ? order[order.length - 1] : null;
+    if (prev >= 0) return order[prev]!;
+    return this._repeatMode === RepeatMode.Queue ? order[order.length - 1]! : null;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -714,7 +710,7 @@ export class WebPlayer {
     for (let i = 1; i <= this._preloadWindowSize; i++) {
       const nextPos = pos + i;
       if (nextPos >= order.length) break;
-      const track   = this._queue.getAt(order[nextPos]);
+      const track   = this._queue.getAt(order[nextPos]!);
       if (!track) continue;
       const src = track.localUri ?? track.url;
       if (!this._preloadEls.has(src)) {

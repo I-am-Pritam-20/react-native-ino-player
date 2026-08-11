@@ -44,13 +44,15 @@ export class WebQueue {
     ) {
       return;
     }
-    const [track] = this._tracks.splice(fromIndex, 1);
+    // splice always removes exactly 1 element here (bounds already checked above)
+    const [track] = this._tracks.splice(fromIndex, 1) as [Track];
     this._tracks.splice(toIndex, 0, track);
   }
 
   updateAt(index: number, metadata: Partial<Track>): void {
     if (index >= 0 && index < this._tracks.length) {
-      this._tracks[index] = { ...this._tracks[index], ...metadata };
+      // noUncheckedIndexedAccess: index is bounds-checked above, assert is safe
+      this._tracks[index] = { ...this._tracks[index]!, ...metadata };
     }
   }
 

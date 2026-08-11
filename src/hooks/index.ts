@@ -168,7 +168,7 @@ export function useRepeatMode(): {
 
   const cycleRepeatMode = useCallback(async () => {
     setLocalRepeat(prev => {
-      const next = CYCLE[(CYCLE.indexOf(prev) + 1) % CYCLE.length];
+      const next = CYCLE[(CYCLE.indexOf(prev) + 1) % CYCLE.length]!;
       InoPlayer.setRepeatMode(next).catch(() => {});
       return next;
     });

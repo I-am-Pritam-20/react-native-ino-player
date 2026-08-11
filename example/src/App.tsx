@@ -3,7 +3,15 @@
  * Demo app — works on Android, iOS, Web, and Windows.
  */
 import React, { useEffect, useState, useCallback } from 'react';
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Platform, Alert,} from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  Alert,
+} from 'react-native';
 
 import InoPlayer, {
   Capability,
